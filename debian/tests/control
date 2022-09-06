@@ -1,0 +1,54 @@
+Test-Command: /usr/share/cargo/bin/cargo-auto-test pyo3-ffi 0.16.5 --all-targets --all-features
+Features: test-name=rust-pyo3-ffi:@
+Depends: dh-cargo (>= 18), @
+Restrictions: allow-stderr, skip-not-installable
+
+Test-Command: /usr/share/cargo/bin/cargo-auto-test pyo3-ffi 0.16.5 --all-targets --no-default-features --features abi3
+Features: test-name=librust-pyo3-ffi-dev:abi3
+Depends: dh-cargo (>= 18), @
+Restrictions: allow-stderr, skip-not-installable
+
+Test-Command: /usr/share/cargo/bin/cargo-auto-test pyo3-ffi 0.16.5 --all-targets --no-default-features --features abi3-py310
+Features: test-name=librust-pyo3-ffi-dev:abi3-py310
+Depends: dh-cargo (>= 18), @
+Restrictions: allow-stderr, skip-not-installable
+
+Test-Command: /usr/share/cargo/bin/cargo-auto-test pyo3-ffi 0.16.5 --all-targets --no-default-features --features abi3-py37
+Features: test-name=librust-pyo3-ffi-dev:abi3-py37
+Depends: dh-cargo (>= 18), @
+Restrictions: allow-stderr, skip-not-installable
+
+Test-Command: /usr/share/cargo/bin/cargo-auto-test pyo3-ffi 0.16.5 --all-targets --no-default-features --features abi3-py38
+Features: test-name=librust-pyo3-ffi-dev:abi3-py38
+Depends: dh-cargo (>= 18), @
+Restrictions: allow-stderr, skip-not-installable
+
+Test-Command: /usr/share/cargo/bin/cargo-auto-test pyo3-ffi 0.16.5 --all-targets --no-default-features --features abi3-py39
+Features: test-name=librust-pyo3-ffi-dev:abi3-py39
+Depends: dh-cargo (>= 18), @
+Restrictions: allow-stderr, skip-not-installable
+
+Test-Command: /usr/share/cargo/bin/cargo-auto-test pyo3-ffi 0.16.5 --all-targets 
+Features: test-name=librust-pyo3-ffi-dev:default
+Depends: dh-cargo (>= 18), @
+Restrictions: allow-stderr, skip-not-installable
+
+Test-Command: /usr/share/cargo/bin/cargo-auto-test pyo3-ffi 0.16.5 --all-targets --no-default-features --features extension-module
+Features: test-name=librust-pyo3-ffi-dev:extension-module
+Depends: dh-cargo (>= 18), @
+Restrictions: allow-stderr, skip-not-installable
+
+Test-Command: /usr/share/cargo/bin/cargo-auto-test pyo3-ffi 0.16.5 --all-targets --no-default-features --features generate-abi3-import-lib
+Features: test-name=librust-pyo3-ffi-dev:generate-abi3-import-lib
+Depends: dh-cargo (>= 18), @
+Restrictions: allow-stderr, skip-not-installable
+
+Test-Command: /usr/share/cargo/bin/cargo-auto-test pyo3-ffi 0.16.5 --all-targets --no-default-features --features generate-import-lib
+Features: test-name=librust-pyo3-ffi-dev:generate-import-lib
+Depends: dh-cargo (>= 18), @
+Restrictions: allow-stderr, skip-not-installable
+
+Test-Command: /usr/share/cargo/bin/cargo-auto-test pyo3-ffi 0.16.5 --all-targets --no-default-features
+Features: test-name=librust-pyo3-ffi-dev:
+Depends: dh-cargo (>= 18), @
+Restrictions: allow-stderr, skip-not-installable
