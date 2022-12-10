@@ -1,12 +1,17 @@
 use crate::object::*;
 use std::os::raw::c_int;
 
+#[cfg(all(not(PyPy), Py_LIMITED_API))]
 opaque_struct!(PyWeakReference);
 
+#[cfg(all(not(PyPy), not(Py_LIMITED_API)))]
+pub use crate::_PyWeakReference as PyWeakReference;
+
+#[cfg_attr(windows, link(name = "pythonXY"))]
 extern "C" {
-    static mut _PyWeakref_RefType: PyTypeObject;
-    static mut _PyWeakref_ProxyType: PyTypeObject;
-    static mut _PyWeakref_CallableProxyType: PyTypeObject;
+    pub static mut _PyWeakref_RefType: PyTypeObject;
+    pub static mut _PyWeakref_ProxyType: PyTypeObject;
+    pub static mut _PyWeakref_CallableProxyType: PyTypeObject;
 
     #[cfg(PyPy)]
     #[link_name = "PyPyWeakref_CheckRef"]

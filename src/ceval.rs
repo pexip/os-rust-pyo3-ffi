@@ -3,6 +3,27 @@ use crate::pystate::PyThreadState;
 use std::os::raw::{c_char, c_int, c_void};
 
 extern "C" {
+    #[cfg_attr(PyPy, link_name = "PyPyEval_EvalCode")]
+    pub fn PyEval_EvalCode(
+        arg1: *mut PyObject,
+        arg2: *mut PyObject,
+        arg3: *mut PyObject,
+    ) -> *mut PyObject;
+
+    pub fn PyEval_EvalCodeEx(
+        co: *mut PyObject,
+        globals: *mut PyObject,
+        locals: *mut PyObject,
+        args: *const *mut PyObject,
+        argc: c_int,
+        kwds: *const *mut PyObject,
+        kwdc: c_int,
+        defs: *const *mut PyObject,
+        defc: c_int,
+        kwdefs: *mut PyObject,
+        closure: *mut PyObject,
+    ) -> *mut PyObject;
+
     #[cfg_attr(Py_3_9, deprecated(note = "Python 3.9"))]
     #[cfg_attr(PyPy, link_name = "PyPyEval_CallObjectWithKeywords")]
     pub fn PyEval_CallObjectWithKeywords(
@@ -52,8 +73,14 @@ extern "C" {
     fn _Py_CheckRecursiveCall(_where: *mut c_char) -> c_int;
 }
 
-// skipped Py_EnterRecursiveCall
-// skipped Py_LeaveRecursiveCall
+extern "C" {
+    #[cfg(Py_3_9)]
+    #[cfg_attr(PyPy, link_name = "PyPy_EnterRecursiveCall")]
+    pub fn Py_EnterRecursiveCall(arg1: *const c_char);
+    #[cfg(Py_3_9)]
+    #[cfg_attr(PyPy, link_name = "PyPy_LeaveRecursiveCall")]
+    pub fn Py_LeaveRecursiveCall();
+}
 
 extern "C" {
     pub fn PyEval_GetFuncName(arg1: *mut PyObject) -> *const c_char;
