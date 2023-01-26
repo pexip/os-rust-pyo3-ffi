@@ -1,18 +1,67 @@
 use std::os::raw::c_int;
 
-use crate::object::{PyObject, PyTypeObject, Py_TYPE};
+use crate::PyObject;
 
-// skipped PyFunctionObject
+#[cfg(all(not(PyPy), not(Py_3_10)))]
+#[repr(C)]
+pub struct PyFunctionObject {
+    pub ob_base: PyObject,
+    pub func_code: *mut PyObject,
+    pub func_globals: *mut PyObject,
+    pub func_defaults: *mut PyObject,
+    pub func_kwdefaults: *mut PyObject,
+    pub func_closure: *mut PyObject,
+    pub func_doc: *mut PyObject,
+    pub func_name: *mut PyObject,
+    pub func_dict: *mut PyObject,
+    pub func_weakreflist: *mut PyObject,
+    pub func_module: *mut PyObject,
+    pub func_annotations: *mut PyObject,
+    pub func_qualname: *mut PyObject,
+    #[cfg(Py_3_8)]
+    pub vectorcall: Option<crate::vectorcallfunc>,
+}
+
+#[cfg(all(not(PyPy), Py_3_10))]
+#[repr(C)]
+pub struct PyFunctionObject {
+    pub ob_base: PyObject,
+    pub func_globals: *mut PyObject,
+    pub func_builtins: *mut PyObject,
+    pub func_name: *mut PyObject,
+    pub func_qualname: *mut PyObject,
+    pub func_code: *mut PyObject,
+    pub func_defaults: *mut PyObject,
+    pub func_kwdefaults: *mut PyObject,
+    pub func_closure: *mut PyObject,
+    pub func_doc: *mut PyObject,
+    pub func_dict: *mut PyObject,
+    pub func_weakreflist: *mut PyObject,
+    pub func_module: *mut PyObject,
+    pub func_annotations: *mut PyObject,
+    pub vectorcall: Option<crate::vectorcallfunc>,
+    #[cfg(Py_3_11)]
+    pub func_version: u32,
+}
+
+#[cfg(PyPy)]
+#[repr(C)]
+pub struct PyFunctionObject {
+    pub ob_base: PyObject,
+    pub func_name: *mut PyObject,
+}
 
 #[cfg_attr(windows, link(name = "pythonXY"))]
 extern "C" {
+    #[cfg(not(PyPy))] // broken, see https://foss.heptapod.net/pypy/pypy/-/issues/3776
     #[cfg_attr(PyPy, link_name = "PyPyFunction_Type")]
-    pub static mut PyFunction_Type: PyTypeObject;
+    pub static mut PyFunction_Type: crate::PyTypeObject;
 }
 
+#[cfg(not(PyPy))]
 #[inline]
 pub unsafe fn PyFunction_Check(op: *mut PyObject) -> c_int {
-    (Py_TYPE(op) == addr_of_mut_shim!(PyFunction_Type)) as c_int
+    (crate::Py_TYPE(op) == addr_of_mut_shim!(PyFunction_Type)) as c_int
 }
 
 extern "C" {
