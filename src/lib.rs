@@ -51,7 +51,7 @@
 //!
 //! PyO3 supports the following software versions:
 //!   - Python 3.7 and up (CPython and PyPy)
-//!   - Rust 1.48 and up
+//!   - Rust 1.56 and up
 //!
 //! # Example: Building Python Native modules
 //!
@@ -75,9 +75,7 @@
 //! crate-type = ["cdylib"]
 //!
 //! [dependencies.pyo3-ffi]
-// workaround for `extended_key_value_attributes`: https://github.com/rust-lang/rust/issues/82768#issuecomment-803935643
-#![cfg_attr(docsrs, cfg_attr(docsrs, doc = concat!("version = \"", env!("CARGO_PKG_VERSION"),  "\"")))]
-#![cfg_attr(not(docsrs), doc = "version = \"*\"")]
+#![doc = concat!("version = \"", env!("CARGO_PKG_VERSION"),  "\"")]
 //! features = ["extension-module"]
 //! ```
 //!
@@ -258,27 +256,13 @@ macro_rules! opaque_struct {
     };
 }
 
-macro_rules! addr_of_mut_shim {
-    ($place:expr) => {{
-        #[cfg(addr_of)]
-        {
-            ::std::ptr::addr_of_mut!($place)
-        }
-        #[cfg(not(addr_of))]
-        {
-            &mut $place as *mut _
-        }
-    }};
-}
-
 pub use self::abstract_::*;
 pub use self::bltinmodule::*;
 pub use self::boolobject::*;
-#[cfg(Py_3_11)]
-pub use self::buffer::*;
 pub use self::bytearrayobject::*;
 pub use self::bytesobject::*;
 pub use self::ceval::*;
+#[cfg(Py_LIMITED_API)]
 pub use self::code::*;
 pub use self::codecs::*;
 pub use self::compile::*;
@@ -298,6 +282,7 @@ pub use self::intrcheck::*;
 pub use self::iterobject::*;
 pub use self::listobject::*;
 pub use self::longobject::*;
+#[cfg(not(Py_LIMITED_API))]
 pub use self::marshal::*;
 pub use self::memoryobject::*;
 pub use self::methodobject::*;
@@ -308,6 +293,8 @@ pub use self::objimpl::*;
 pub use self::osmodule::*;
 #[cfg(not(any(PyPy, Py_LIMITED_API, Py_3_10)))]
 pub use self::pyarena::*;
+#[cfg(Py_3_11)]
+pub use self::pybuffer::*;
 pub use self::pycapsule::*;
 pub use self::pyerrors::*;
 pub use self::pyframe::*;
@@ -335,13 +322,12 @@ mod abstract_;
 // skipped ast.h
 mod bltinmodule;
 mod boolobject;
-#[cfg(Py_3_11)]
-mod buffer;
 mod bytearrayobject;
 mod bytesobject;
 // skipped cellobject.h
 mod ceval;
 // skipped classobject.h
+#[cfg(Py_LIMITED_API)]
 mod code;
 mod codecs;
 mod compile;
@@ -368,7 +354,8 @@ mod iterobject;
 mod listobject;
 // skipped longintrepr.h
 mod longobject;
-pub(crate) mod marshal;
+#[cfg(not(Py_LIMITED_API))]
+pub mod marshal;
 mod memoryobject;
 mod methodobject;
 mod modsupport;
@@ -387,8 +374,9 @@ mod osmodule;
 // skipped py_curses.h
 #[cfg(not(any(PyPy, Py_LIMITED_API, Py_3_10)))]
 mod pyarena;
+#[cfg(Py_3_11)]
+mod pybuffer;
 mod pycapsule;
-// skipped pydecimal.h
 // skipped pydtrace.h
 mod pyerrors;
 // skipped pyexpat.h
@@ -402,6 +390,7 @@ mod pylifecycle;
 mod pymem;
 mod pyport;
 mod pystate;
+// skipped pystats.h
 mod pythonrun;
 // skipped pystrhex.h
 // skipped pystrcmp.h
@@ -422,6 +411,7 @@ mod warnings;
 mod weakrefobject;
 
 // Additional headers that are not exported by Python.h
+#[deprecated(note = "Python 3.12")]
 pub mod structmember;
 
 // "Limited API" definitions matching Python's `include/cpython` directory.
