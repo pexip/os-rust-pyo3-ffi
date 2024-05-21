@@ -10,7 +10,7 @@ Build-Depends: debhelper (>= 12),
  librust-pyo3-build-config-0.20.2+default-dev <!nocheck>,
  librust-pyo3-build-config-0.20.2+resolve-config-dev <!nocheck>,
  libpython3-all-dev <!nocheck>,
- python3-all-dev <!nocheck>
+ python3.11-dev <!nocheck>
 Maintainer: Pexip AS <packaging@pexip.com>
 XSBC-Pexip-Original-Maintainer: Debian Rust Maintainers <pkg-rust-maintainers@alioth-lists.debian.net>
 XSBC-Pexip-Original-Uploaders:
@@ -41,7 +41,7 @@ Depends:
  librust-pyo3-build-config-0.20.2+python3-dll-a-dev,
  librust-pyo3-build-config-0.20.2+resolve-config-dev,
  libpython3-all-dev,
- python3.12-dev
+ python3.11-dev
 Provides:
  librust-pyo3-ffi+abi3-dev (= ${binary:Version}),
  librust-pyo3-ffi+abi3-py310-dev (= ${binary:Version}),
