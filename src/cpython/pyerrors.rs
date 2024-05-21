@@ -65,6 +65,8 @@ pub struct PyImportErrorObject {
     pub msg: *mut PyObject,
     pub name: *mut PyObject,
     pub path: *mut PyObject,
+    #[cfg(Py_3_12)]
+    pub name_from: *mut PyObject,
 }
 
 #[cfg(not(PyPy))]
@@ -150,6 +152,11 @@ pub struct PyStopIterationObject {
     pub value: *mut PyObject,
 }
 
+extern "C" {
+    #[cfg(not(PyPy))]
+    pub fn _PyErr_ChainExceptions(typ: *mut PyObject, val: *mut PyObject, tb: *mut PyObject);
+}
+
 // skipped PyNameErrorObject
 // skipped PyAttributeErrorObject
 
@@ -159,8 +166,6 @@ pub struct PyStopIterationObject {
 // skipped _PyErr_SetKeyError
 // skipped _PyErr_GetTopmostException
 // skipped _PyErr_GetExcInfo
-
-// skipped _PyErr_ChainExceptions
 
 // skipped PyErr_SetFromErrnoWithUnicodeFilename
 

@@ -24,19 +24,19 @@ extern "C" {
 #[cfg(Py_3_9)]
 #[inline]
 pub unsafe fn PyCFunction_CheckExact(op: *mut PyObject) -> c_int {
-    (Py_TYPE(op) == addr_of_mut_shim!(PyCFunction_Type)) as c_int
+    (Py_TYPE(op) == ptr::addr_of_mut!(PyCFunction_Type)) as c_int
 }
 
 #[cfg(Py_3_9)]
 #[inline]
 pub unsafe fn PyCFunction_Check(op: *mut PyObject) -> c_int {
-    PyObject_TypeCheck(op, addr_of_mut_shim!(PyCFunction_Type))
+    PyObject_TypeCheck(op, ptr::addr_of_mut!(PyCFunction_Type))
 }
 
 #[cfg(not(Py_3_9))]
 #[inline]
 pub unsafe fn PyCFunction_Check(op: *mut PyObject) -> c_int {
-    (Py_TYPE(op) == addr_of_mut_shim!(PyCFunction_Type)) as c_int
+    (Py_TYPE(op) == ptr::addr_of_mut!(PyCFunction_Type)) as c_int
 }
 
 pub type PyCFunction =
@@ -85,6 +85,11 @@ extern "C" {
     ) -> *mut PyObject;
 }
 
+/// Represents the [PyMethodDef](https://docs.python.org/3/c-api/structures.html#c.PyMethodDef)
+/// structure.
+///
+/// Note that CPython may leave fields uninitialized. You must ensure that
+/// `ml_name` != NULL before dereferencing or reading other fields.
 #[repr(C)]
 #[derive(Copy, Clone, PartialEq, Eq)]
 pub struct PyMethodDef {

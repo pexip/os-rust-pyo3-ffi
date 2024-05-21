@@ -1,3 +1,37 @@
+rust-pyo3-ffi (0.20.2-2) unstable; urgency=medium
+
+  * Team upload.
+  * Package pyo3-ffi 0.20.2 from crates.io using debcargo 2.6.1
+  * Mark tests for the "abi3-py312" feature as "broken" since the default
+    python version in Debian is still 3.11.
+
+ -- Peter Michael Green <plugwash@debian.org>  Sun, 21 Jan 2024 22:18:06 +0000
+
+rust-pyo3-ffi (0.20.2-1) unstable; urgency=medium
+
+  * Package pyo3-ffi 0.20.2 from crates.io using debcargo 2.6.1
+
+ -- Jelmer Vernooĳ <jelmer@debian.org>  Sat, 20 Jan 2024 00:14:34 +0000
+
+rust-pyo3-ffi (0.19.2-1) unstable; urgency=medium
+
+  * Team upload.
+  * Package pyo3-ffi 0.19.2 from crates.io using debcargo 2.6.0
+
+ -- Peter Michael Green <plugwash@debian.org>  Thu, 09 Nov 2023 19:09:55 +0000
+
+rust-pyo3-ffi (0.19.0-1) unstable; urgency=medium
+
+  * Package pyo3-ffi 0.19.0 from crates.io using debcargo 2.6.0
+
+ -- Jelmer Vernooĳ <jelmer@debian.org>  Sun, 11 Jun 2023 11:57:04 +0100
+
+rust-pyo3-ffi (0.18.3-1) experimental; urgency=medium
+
+  * Package pyo3-ffi 0.18.3 from crates.io using debcargo 2.6.0
+
+ -- Jelmer Vernooĳ <jelmer@debian.org>  Tue, 30 May 2023 16:39:20 +0100
+
 rust-pyo3-ffi (0.17.3-1+pexip24u4) pexip-bookworm; urgency=medium
 
   * New versioning scheme
