@@ -1,3 +1,9 @@
+rust-pyo3-ffi (0.20.2-2+pexip24u1) pexip; urgency=medium
+
+  * New upstream release
+
+ -- Huw Jones <huw@pexip.com>  Tue, 21 May 2024 15:00:01 +0100
+
 rust-pyo3-ffi (0.20.2-2) unstable; urgency=medium
 
   * Team upload.
