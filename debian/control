@@ -1,0 +1,104 @@
+Source: rust-pyo3-ffi
+Section: rust
+Priority: optional
+Build-Depends: debhelper-compat (= 13),
+ dh-sequence-cargo
+Build-Depends-Arch: cargo:native <!nocheck>,
+ rustc:native (>= 1.74) <!nocheck>,
+ libstd-rust-dev <!nocheck>,
+ librust-libc-0.2+default-dev (>= 0.2.62-~~) <!nocheck>,
+ librust-pyo3-build-config-0.26+default-dev <!nocheck>,
+ librust-pyo3-build-config-0.26+default-dev (<< 0.26.1-~~) <!nocheck>,
+ librust-pyo3-build-config-0.26+resolve-config-dev <!nocheck>,
+ librust-pyo3-build-config-0.26+resolve-config-dev (<< 0.26.1-~~) <!nocheck>,
+ python3-all-dev <!nocheck>
+Maintainer: Debian Rust Maintainers <pkg-rust-maintainers@alioth-lists.debian.net>
+Uploaders:
+ Jelmer Vernooĳ <jelmer@debian.org>
+Standards-Version: 4.7.2
+Vcs-Git: https://salsa.debian.org/rust-team/debcargo-conf.git [src/pyo3-ffi]
+Vcs-Browser: https://salsa.debian.org/rust-team/debcargo-conf/tree/master/src/pyo3-ffi
+Homepage: https://github.com/pyo3/pyo3
+X-Cargo-Crate: pyo3-ffi
+
+Package: librust-pyo3-ffi-dev
+Architecture: any
+Multi-Arch: same
+Depends:
+ ${misc:Depends},
+ librust-libc-0.2+default-dev (>= 0.2.62-~~),
+ librust-pyo3-build-config-0.26+abi3-dev,
+ librust-pyo3-build-config-0.26+abi3-dev (<< 0.26.1-~~),
+ librust-pyo3-build-config-0.26+abi3-py310-dev,
+ librust-pyo3-build-config-0.26+abi3-py310-dev (<< 0.26.1-~~),
+ librust-pyo3-build-config-0.26+abi3-py311-dev,
+ librust-pyo3-build-config-0.26+abi3-py311-dev (<< 0.26.1-~~),
+ librust-pyo3-build-config-0.26+abi3-py312-dev,
+ librust-pyo3-build-config-0.26+abi3-py312-dev (<< 0.26.1-~~),
+ librust-pyo3-build-config-0.26+abi3-py313-dev,
+ librust-pyo3-build-config-0.26+abi3-py313-dev (<< 0.26.1-~~),
+ librust-pyo3-build-config-0.26+abi3-py314-dev,
+ librust-pyo3-build-config-0.26+abi3-py314-dev (<< 0.26.1-~~),
+ librust-pyo3-build-config-0.26+abi3-py37-dev,
+ librust-pyo3-build-config-0.26+abi3-py37-dev (<< 0.26.1-~~),
+ librust-pyo3-build-config-0.26+abi3-py38-dev,
+ librust-pyo3-build-config-0.26+abi3-py38-dev (<< 0.26.1-~~),
+ librust-pyo3-build-config-0.26+abi3-py39-dev,
+ librust-pyo3-build-config-0.26+abi3-py39-dev (<< 0.26.1-~~),
+ librust-pyo3-build-config-0.26+default-dev,
+ librust-pyo3-build-config-0.26+default-dev (<< 0.26.1-~~),
+ librust-pyo3-build-config-0.26+extension-module-dev,
+ librust-pyo3-build-config-0.26+extension-module-dev (<< 0.26.1-~~),
+ librust-pyo3-build-config-0.26+resolve-config-dev,
+ librust-pyo3-build-config-0.26+resolve-config-dev (<< 0.26.1-~~),
+ python3-all-dev
+Provides:
+ librust-pyo3-ffi+abi3-dev (= ${binary:Version}),
+ librust-pyo3-ffi+abi3-py310-dev (= ${binary:Version}),
+ librust-pyo3-ffi+abi3-py311-dev (= ${binary:Version}),
+ librust-pyo3-ffi+abi3-py312-dev (= ${binary:Version}),
+ librust-pyo3-ffi+abi3-py313-dev (= ${binary:Version}),
+ librust-pyo3-ffi+abi3-py314-dev (= ${binary:Version}),
+ librust-pyo3-ffi+abi3-py37-dev (= ${binary:Version}),
+ librust-pyo3-ffi+abi3-py38-dev (= ${binary:Version}),
+ librust-pyo3-ffi+abi3-py39-dev (= ${binary:Version}),
+ librust-pyo3-ffi+default-dev (= ${binary:Version}),
+ librust-pyo3-ffi+extension-module-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0+abi3-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0+abi3-py310-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0+abi3-py311-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0+abi3-py312-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0+abi3-py313-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0+abi3-py314-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0+abi3-py37-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0+abi3-py38-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0+abi3-py39-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0+default-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0+extension-module-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26+abi3-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26+abi3-py310-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26+abi3-py311-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26+abi3-py312-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26+abi3-py313-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26+abi3-py314-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26+abi3-py37-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26+abi3-py38-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26+abi3-py39-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26+default-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26+extension-module-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26.0-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26.0+abi3-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26.0+abi3-py310-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26.0+abi3-py311-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26.0+abi3-py312-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26.0+abi3-py313-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26.0+abi3-py314-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26.0+abi3-py37-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26.0+abi3-py38-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26.0+abi3-py39-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26.0+default-dev (= ${binary:Version}),
+ librust-pyo3-ffi-0.26.0+extension-module-dev (= ${binary:Version})
+Description: Python-API bindings for the PyO3 ecosystem - Rust source code
+ Source code for Debianized Rust crate "pyo3-ffi"
