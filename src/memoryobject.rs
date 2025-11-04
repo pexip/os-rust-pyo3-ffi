@@ -1,13 +1,12 @@
 use crate::object::*;
 use crate::pyport::Py_ssize_t;
-use std::os::raw::{c_char, c_int};
+use std::ffi::{c_char, c_int};
 use std::ptr::addr_of_mut;
+
+// skipped _PyManagedBuffer_Type
 
 #[cfg_attr(windows, link(name = "pythonXY"))]
 extern "C" {
-    #[cfg(not(Py_LIMITED_API))]
-    pub static mut _PyManagedBuffer_Type: PyTypeObject;
-
     #[cfg_attr(PyPy, link_name = "PyPyMemoryView_Type")]
     pub static mut PyMemoryView_Type: PyTypeObject;
 }
@@ -29,7 +28,10 @@ extern "C" {
         size: Py_ssize_t,
         flags: c_int,
     ) -> *mut PyObject;
-    // skipped non-limited PyMemoryView_FromBuffer
+    #[cfg(any(Py_3_11, not(Py_LIMITED_API)))]
+    #[cfg_attr(PyPy, link_name = "PyPyMemoryView_FromBuffer")]
+    pub fn PyMemoryView_FromBuffer(view: *const crate::Py_buffer) -> *mut PyObject;
+    #[cfg_attr(PyPy, link_name = "PyPyMemoryView_GetContiguous")]
     pub fn PyMemoryView_GetContiguous(
         base: *mut PyObject,
         buffertype: c_int,

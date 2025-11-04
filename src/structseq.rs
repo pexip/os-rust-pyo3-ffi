@@ -1,7 +1,7 @@
 use crate::object::{PyObject, PyTypeObject};
 #[cfg(not(PyPy))]
 use crate::pyport::Py_ssize_t;
-use std::os::raw::{c_char, c_int};
+use std::ffi::{c_char, c_int};
 
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -42,13 +42,13 @@ extern "C" {
 #[cfg(not(Py_LIMITED_API))]
 pub type PyStructSequence = crate::PyTupleObject;
 
-#[cfg(not(any(Py_LIMITED_API, PyPy)))]
+#[cfg(not(any(Py_LIMITED_API, PyPy, GraalPy)))]
 #[inline]
 pub unsafe fn PyStructSequence_SET_ITEM(op: *mut PyObject, i: Py_ssize_t, v: *mut PyObject) {
     crate::PyTuple_SET_ITEM(op, i, v)
 }
 
-#[cfg(not(any(Py_LIMITED_API, PyPy)))]
+#[cfg(not(any(Py_LIMITED_API, PyPy, GraalPy)))]
 #[inline]
 pub unsafe fn PyStructSequence_GET_ITEM(op: *mut PyObject, i: Py_ssize_t) -> *mut PyObject {
     crate::PyTuple_GET_ITEM(op, i)

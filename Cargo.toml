@@ -11,10 +11,17 @@
 
 [package]
 edition = "2021"
+rust-version = "1.74"
 name = "pyo3-ffi"
-version = "0.20.2"
+version = "0.26.0"
 authors = ["PyO3 Project and Contributors <https://github.com/PyO3>"]
+build = "build.rs"
 links = "python"
+autolib = false
+autobins = false
+autoexamples = false
+autotests = false
+autobenches = false
 description = "Python-API bindings for the PyO3 ecosystem"
 homepage = "https://github.com/pyo3/pyo3"
 readme = "README.md"
@@ -31,12 +38,13 @@ categories = [
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/pyo3/pyo3"
 
-[dependencies.libc]
-version = "0.2.62"
+[package.metadata.cpython]
+max-version = "3.14"
+min-version = "3.7"
 
-[build-dependencies.pyo3-build-config]
-version = "=0.20.2"
-features = ["resolve-config"]
+[package.metadata.pypy]
+max-version = "3.11"
+min-version = "3.9"
 
 [features]
 abi3 = ["pyo3-build-config/abi3"]
@@ -49,8 +57,16 @@ abi3-py311 = [
     "pyo3-build-config/abi3-py311",
 ]
 abi3-py312 = [
-    "abi3",
+    "abi3-py313",
     "pyo3-build-config/abi3-py312",
+]
+abi3-py313 = [
+    "abi3-py314",
+    "pyo3-build-config/abi3-py313",
+]
+abi3-py314 = [
+    "abi3",
+    "pyo3-build-config/abi3-py314",
 ]
 abi3-py37 = [
     "abi3-py38",
@@ -67,6 +83,20 @@ abi3-py39 = [
 default = []
 extension-module = ["pyo3-build-config/extension-module"]
 generate-import-lib = ["pyo3-build-config/python3-dll-a"]
+
+[lib]
+name = "pyo3_ffi"
+path = "src/lib.rs"
+
+[dependencies.libc]
+version = "0.2.62"
+
+[dev-dependencies.paste]
+version = "1"
+
+[build-dependencies.pyo3-build-config]
+version = "=0.26.0"
+features = ["resolve-config"]
 
 [lints.clippy]
 checked_conversions = "warn"
@@ -86,9 +116,13 @@ useless_transmute = "warn"
 [lints.rust]
 elided_lifetimes_in_paths = "warn"
 invalid_doc_attributes = "warn"
-rust_2018_idioms = "warn"
 rust_2021_prelude_collisions = "warn"
+unsafe_op_in_unsafe_fn = "warn"
 unused_lifetimes = "warn"
+
+[lints.rust.rust_2018_idioms]
+level = "warn"
+priority = -1
 
 [lints.rustdoc]
 bare_urls = "warn"

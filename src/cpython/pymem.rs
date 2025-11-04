@@ -1,5 +1,5 @@
 use libc::size_t;
-use std::os::raw::c_void;
+use std::ffi::c_void;
 
 extern "C" {
     #[cfg_attr(PyPy, link_name = "PyPyMem_RawMalloc")]
@@ -26,7 +26,7 @@ pub enum PyMemAllocatorDomain {
 }
 
 // skipped PyMemAllocatorName
-#[cfg(not(PyPy))]
+#[cfg(not(any(PyPy, GraalPy)))]
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct PyMemAllocatorEx {
@@ -40,10 +40,10 @@ pub struct PyMemAllocatorEx {
 }
 
 extern "C" {
-    #[cfg(not(PyPy))]
+    #[cfg(not(any(PyPy, GraalPy)))]
     pub fn PyMem_GetAllocator(domain: PyMemAllocatorDomain, allocator: *mut PyMemAllocatorEx);
-    #[cfg(not(PyPy))]
+    #[cfg(not(any(PyPy, GraalPy)))]
     pub fn PyMem_SetAllocator(domain: PyMemAllocatorDomain, allocator: *mut PyMemAllocatorEx);
-    #[cfg(not(PyPy))]
+    #[cfg(not(any(PyPy, GraalPy)))]
     pub fn PyMem_SetupDebugHooks();
 }

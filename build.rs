@@ -4,18 +4,125 @@ use pyo3_build_config::{
         cargo_env_var, env_var, errors::Result, is_linking_libpython, resolve_interpreter_config,
         InterpreterConfig, PythonVersion,
     },
+    warn, PythonImplementation,
 };
 
 /// Minimum Python version PyO3 supports.
-const MINIMUM_SUPPORTED_VERSION: PythonVersion = PythonVersion { major: 3, minor: 7 };
+struct SupportedVersions {
+    min: PythonVersion,
+    max: PythonVersion,
+}
+
+const SUPPORTED_VERSIONS_CPYTHON: SupportedVersions = SupportedVersions {
+    min: PythonVersion { major: 3, minor: 7 },
+    max: PythonVersion {
+        major: 3,
+        minor: 14,
+    },
+};
+
+const SUPPORTED_VERSIONS_PYPY: SupportedVersions = SupportedVersions {
+    min: PythonVersion { major: 3, minor: 9 },
+    max: SUPPORTED_VERSIONS_CPYTHON.max,
+};
+
+const SUPPORTED_VERSIONS_GRAALPY: SupportedVersions = SupportedVersions {
+    min: PythonVersion {
+        major: 3,
+        minor: 10,
+    },
+    max: SUPPORTED_VERSIONS_CPYTHON.max,
+};
 
 fn ensure_python_version(interpreter_config: &InterpreterConfig) -> Result<()> {
-    ensure!(
-        interpreter_config.version >= MINIMUM_SUPPORTED_VERSION,
-        "the configured Python interpreter version ({}) is lower than PyO3's minimum supported version ({})",
-        interpreter_config.version,
-        MINIMUM_SUPPORTED_VERSION,
-    );
+    // This is an undocumented env var which is only really intended to be used in CI / for testing
+    // and development.
+    if std::env::var("UNSAFE_PYO3_SKIP_VERSION_CHECK").as_deref() == Ok("1") {
+        return Ok(());
+    }
+
+    match interpreter_config.implementation {
+        PythonImplementation::CPython => {
+            let versions = SUPPORTED_VERSIONS_CPYTHON;
+            ensure!(
+                interpreter_config.version >= versions.min,
+                "the configured Python interpreter version ({}) is lower than PyO3's minimum supported version ({})",
+                interpreter_config.version,
+                versions.min,
+            );
+            if interpreter_config.version > versions.max {
+                ensure!(!interpreter_config.is_free_threaded(),
+                        "The configured Python interpreter version ({}) is newer than PyO3's maximum supported version ({})\n\
+                         = help: please check if an updated version of PyO3 is available. Current version: {}\n\
+                         = help: The free-threaded build of CPython does not support the limited API so this check cannot be suppressed.",
+                        interpreter_config.version, versions.max, std::env::var("CARGO_PKG_VERSION").unwrap()
+                );
+                ensure!(env_var("PYO3_USE_ABI3_FORWARD_COMPATIBILITY").is_some_and(|os_str| os_str == "1"),
+                        "the configured Python interpreter version ({}) is newer than PyO3's maximum supported version ({})\n\
+                         = help: please check if an updated version of PyO3 is available. Current version: {}\n\
+                         = help: set PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 to suppress this check and build anyway using the stable ABI",
+                        interpreter_config.version,
+                        versions.max,
+                        std::env::var("CARGO_PKG_VERSION").unwrap(),
+                );
+            }
+        }
+        PythonImplementation::PyPy => {
+            let versions = SUPPORTED_VERSIONS_PYPY;
+            ensure!(
+                interpreter_config.version >= versions.min,
+                "the configured PyPy interpreter version ({}) is lower than PyO3's minimum supported version ({})",
+                interpreter_config.version,
+                versions.min,
+            );
+            // PyO3 does not support abi3, so we cannot offer forward compatibility
+            ensure!(
+                interpreter_config.version <= versions.max,
+                "the configured PyPy interpreter version ({}) is newer than PyO3's maximum supported version ({})\n\
+                 = help: please check if an updated version of PyO3 is available. Current version: {}",
+                interpreter_config.version,
+                versions.max,
+                std::env::var("CARGO_PKG_VERSION").unwrap()
+            );
+        }
+        PythonImplementation::GraalPy => {
+            let versions = SUPPORTED_VERSIONS_GRAALPY;
+            ensure!(
+                interpreter_config.version >= versions.min,
+                "the configured GraalPy interpreter version ({}) is lower than PyO3's minimum supported version ({})",
+                interpreter_config.version,
+                versions.min,
+            );
+            // GraalPy does not support abi3, so we cannot offer forward compatibility
+            ensure!(
+                interpreter_config.version <= versions.max,
+                "the configured GraalPy interpreter version ({}) is newer than PyO3's maximum supported version ({})\n\
+                 = help: please check if an updated version of PyO3 is available. Current version: {}",
+                interpreter_config.version,
+                versions.max,
+                std::env::var("CARGO_PKG_VERSION").unwrap()
+            );
+        }
+    }
+
+    if interpreter_config.abi3 {
+        match interpreter_config.implementation {
+            PythonImplementation::CPython => {
+                if interpreter_config.is_free_threaded() {
+                    warn!(
+                            "The free-threaded build of CPython does not yet support abi3 so the build artifacts will be version-specific."
+                    )
+                }
+            }
+            PythonImplementation::PyPy => warn!(
+                "PyPy does not yet support abi3 so the build artifacts will be version-specific. \
+                See https://github.com/pypy/pypy/issues/3397 for more information."
+            ),
+            PythonImplementation::GraalPy => warn!(
+                "GraalPy does not support abi3 so the build artifacts will be version-specific."
+            ),
+        }
+    }
 
     Ok(())
 }
@@ -63,7 +170,7 @@ fn emit_link_config(interpreter_config: &InterpreterConfig) -> Result<()> {
     );
 
     if let Some(lib_dir) = &interpreter_config.lib_dir {
-        println!("cargo:rustc-link-search=native={}", lib_dir);
+        println!("cargo:rustc-link-search=native={lib_dir}");
     }
 
     Ok(())
@@ -79,7 +186,7 @@ fn emit_link_config(interpreter_config: &InterpreterConfig) -> Result<()> {
 fn configure_pyo3() -> Result<()> {
     let interpreter_config = resolve_interpreter_config()?;
 
-    if env_var("PYO3_PRINT_CONFIG").map_or(false, |os_str| os_str == "1") {
+    if env_var("PYO3_PRINT_CONFIG").is_some_and(|os_str| os_str == "1") {
         print_config_and_exit(&interpreter_config);
     }
 
@@ -94,15 +201,14 @@ fn configure_pyo3() -> Result<()> {
     }
 
     for cfg in interpreter_config.build_script_outputs() {
-        println!("{}", cfg)
+        println!("{cfg}")
     }
 
     // Extra lines come last, to support last write wins.
     for line in &interpreter_config.extra_build_script_lines {
-        println!("{}", line);
+        println!("{line}");
     }
 
-    // Emit cfgs like `thread_local_const_init`
     print_feature_cfgs();
 
     Ok(())
@@ -118,6 +224,7 @@ fn print_config_and_exit(config: &InterpreterConfig) {
 }
 
 fn main() {
+    pyo3_build_config::print_expected_cfgs();
     if let Err(e) = configure_pyo3() {
         eprintln!("error: {}", e.report());
         std::process::exit(1)
