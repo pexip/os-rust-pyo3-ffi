@@ -1,3 +1,30 @@
+rust-pyo3-ffi (0.27.2-2) unstable; urgency=medium
+
+  * Team upload.
+  * Package pyo3-ffi 0.27.2 from crates.io using debcargo 2.7.11
+  * Multiarchify Python dependencies (thanks, Helmut Grohne; closes:
+    #1124553).
+
+ -- Colin Watson <cjwatson@debian.org>  Wed, 11 Feb 2026 12:21:02 +0000
+
+rust-pyo3-ffi (0.27.2-1) unstable; urgency=medium
+
+  * Package pyo3-ffi 0.27.2 from crates.io using debcargo 2.7.11
+
+ -- Jelmer Vernooĳ <jelmer@debian.org>  Mon, 01 Dec 2025 09:19:31 +0000
+
+rust-pyo3-ffi (0.27.1-2) unstable; urgency=medium
+
+  * Target unstable distribution.
+
+ -- Jelmer Vernooĳ <jelmer@debian.org>  Tue, 18 Nov 2025 10:28:18 +0000
+
+rust-pyo3-ffi (0.27.1-1) experimental; urgency=medium
+
+  * Package pyo3-ffi 0.27.1 from crates.io using debcargo 2.7.11
+
+ -- Jelmer Vernooĳ <jelmer@debian.org>  Thu, 30 Oct 2025 18:55:20 +0000
+
 rust-pyo3-ffi (0.26.0-1) unstable; urgency=medium
 
   * Team upload.
