@@ -1,4 +1,4 @@
-#![cfg_attr(docsrs, feature(doc_cfg, doc_auto_cfg))]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 //! Raw FFI declarations for Python's C API.
 //!
 //! PyO3 can be used to write native Python modules or run Python code and modules from Rust.
@@ -17,7 +17,7 @@
 //! generally the following apply:
 //! - Pointer arguments have to point to a valid Python object of the correct type,
 //! although null pointers are sometimes valid input.
-//! - The vast majority can only be used safely while the GIL is held.
+//! - The vast majority can only be used safely while the thread is attached to the Python interpreter.
 //! - Some functions have additional safety requirements, consult the
 //! [Python/C API Reference Manual][capi]
 //! for more information.
@@ -81,7 +81,7 @@
 //!
 //! `pyo3-ffi` supports the following Python distributions:
 //!   - CPython 3.7 or greater
-//!   - PyPy 7.3 (Python 3.9+)
+//!   - PyPy 7.3 (Python 3.11+)
 //!   - GraalPy 24.0 or greater (Python 3.10+)
 //!
 //! # Example: Building Python Native modules
