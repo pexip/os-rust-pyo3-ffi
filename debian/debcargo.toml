@@ -2,8 +2,12 @@ overlay = "."
 uploaders = ["Jelmer Vernooĳ <jelmer@debian.org>"]
 collapse_features = true
 
+[source]
+build_depends_arch = ["python3-all-dev:native <!nocheck>"]
+build_depends_excludes = ["python3-all-dev:any <!nocheck>"]
+
 [packages.lib]
-depends = ["python3-all-dev"]
+depends = ["libpython3-all-dev", "python3-all-dev:any"]
 
 # Re-enable this once Python 3.14 is the default in Debian.
 [packages."lib+abi3-py314"]
