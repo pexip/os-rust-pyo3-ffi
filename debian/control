@@ -21,6 +21,7 @@ Vcs-Git: https://salsa.debian.org/rust-team/debcargo-conf.git [src/pyo3-ffi]
 Vcs-Browser: https://salsa.debian.org/rust-team/debcargo-conf/tree/master/src/pyo3-ffi
 Homepage: https://github.com/pyo3/pyo3
 X-Cargo-Crate: pyo3-ffi
+XS-Pexip-Upstream: http://ftp.debian.org/debian/ forky
 
 Package: librust-pyo3-ffi-dev
 Architecture: any
